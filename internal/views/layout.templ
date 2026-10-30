@@ -1,0 +1,20 @@
+package views
+
+templ layout(title string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'"/>
+			<link rel="stylesheet" href="/assets/css/output.css"/>
+			<script src="/assets/js/htmx.min.js" defer></script>
+			<title>{ title }</title>
+		</head>
+		<body class="min-h-screen bg-bg text-fg font-mono">
+			<main class="mx-auto max-w-2xl p-6">
+				{ children... }
+			</main>
+		</body>
+	</html>
+}

@@ -1,0 +1,38 @@
+package views
+
+import "github.com/soockee/go-service-template/internal/notes"
+
+templ Home(list []notes.Note) {
+	@layout("Notes") {
+		<h1 class="mb-6 text-2xl">Notes</h1>
+		<form
+			action="/notes"
+			method="post"
+			hx-post="/notes"
+			hx-target="#note-list"
+			hx-swap="afterbegin"
+			class="mb-8 space-y-2"
+		>
+			<input name="title" required maxlength="200" placeholder="Title" class="w-full border border-muted bg-bg p-2"/>
+			<textarea name="body" placeholder="Body" class="w-full border border-muted bg-bg p-2"></textarea>
+			<button type="submit" class="border border-muted px-4 py-1">Add</button>
+		</form>
+		<ul id="note-list" class="space-y-3">
+			for _, n := range list {
+				@NoteItem(n)
+			}
+		</ul>
+	}
+}
+
+templ NoteItem(n notes.Note) {
+	<li class="border border-muted p-3">
+		<div class="font-bold">{ n.Title }</div>
+		if n.Body != "" {
+			<p class="mt-1 whitespace-pre-wrap">{ n.Body }</p>
+		}
+		<time class="text-sm text-muted" datetime={ n.CreatedAt.Format("2006-01-02T15:04:05Z07:00") }>
+			{ n.CreatedAt.Format("2006-01-02 15:04") }
+		</time>
+	</li>
+}

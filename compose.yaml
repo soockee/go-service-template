@@ -1,0 +1,33 @@
+# Local development only: `docker compose up -d db` for Postgres, or
+# `docker compose --profile app up --build` to run the service image too.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  app:
+    profiles: ["app"]
+    build: .
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: postgres://app:app@db:5432/app?sslmode=disable
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
